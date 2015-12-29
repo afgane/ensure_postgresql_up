@@ -1,0 +1,16 @@
+## Make sure postgresql is up and running
+  - service: name=supervisor state=started
+  - supervisorctl: name=postgresql state=present
+    register: supervisor_postgres
+    ignore_errors: yes
+
+  - debug: var=supervisor_postgres
+
+  - service: name=postgresql state=started
+    when: supervisor_postgres.failed is defined
+
+  - action: shell /usr/bin/pg_isready
+    register: result
+    until: result.stdout.find("accepting connections") != -1
+    retries: 10
+    delay: 5
