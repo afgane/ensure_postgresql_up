@@ -4,8 +4,6 @@
     register: supervisor_postgres
     ignore_errors: yes
 
-  - debug: var=supervisor_postgres
-
   - service: name=postgresql state=started
     when: supervisor_postgres.failed is defined
 
