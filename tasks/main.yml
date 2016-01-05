@@ -6,6 +6,7 @@
 
   - supervisorctl: name=postgresql state=started
     when: supervisor_postgres.failed is undefined
+    ignore_errors: yes
 
   - service: name=postgresql state=started
     ignore_errors: yes
