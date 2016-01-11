@@ -12,11 +12,7 @@
     ignore_errors: yes
     when: supervisor_postgres.failed is defined
 
-  - shell: "{{ item }}"
-    with_items:
-      - echo {{ supervisor_postgres_database_path }}
-      - cat /var/log/supervisor/postgresql*
-    tags: debug
+  - debug: var=supervisor_postgres_database_path
 
   - action: shell /usr/bin/pg_isready
     register: result
