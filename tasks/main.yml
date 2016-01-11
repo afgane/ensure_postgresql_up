@@ -12,9 +12,11 @@
     ignore_errors: yes
     when: supervisor_postgres.failed is defined
 
-  - shell: supervisorctl status
-  - shell: cat /etc/postgresql/9.3/main/postgresql.conf
-  - shell: cat /var/log/supervisor/postgresql*
+  - shell: "{{ item }}"
+    with_items:
+      - echo {{ supervisor_postgres_database_path }}
+      - cat /var/log/supervisor/postgresql*
+    tags: debug
 
   - action: shell /usr/bin/pg_isready
     register: result
