@@ -12,6 +12,10 @@
     ignore_errors: yes
     when: supervisor_postgres.failed is defined
 
+  - shell: supervisorctl status
+  - shell: cat /etc/postgresql/9.3/main/postgresql.conf
+  - shell: cat /var/log/supervisor/postgresql*
+
   - action: shell /usr/bin/pg_isready
     register: result
     until: result.stdout.find("accepting connections") != -1
