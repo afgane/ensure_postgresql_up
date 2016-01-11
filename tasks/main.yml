@@ -12,12 +12,26 @@
     ignore_errors: yes
     when: supervisor_postgres.failed is defined
 
-  - shell: supervisorctl status
-  - shell: cat /etc/postgresql/9.3/main/postgresql.conf
-  - shell: cat /var/log/supervisor/postgresql*
-
   - action: shell /usr/bin/pg_isready
     register: result
     until: result.stdout.find("accepting connections") != -1
     retries: 10
     delay: 5
+
+  - name: discover location of pg_data
+    command: psql -t -P format=unaligned -c "SHOW data_directory;"
+    register: pg_data
+    sudo: yes
+    sudo_user: postgres
+    changed_when: False
+
+  - name: discover postgres version
+    shell: psql -t -P format=unaligned -c "SHOW server_version;"|egrep -o '[0-9]{1,}\.[0-9]{1,}'
+    register: pg_version
+    sudo: yes
+    sudo_user: postgres
+    changed_when: False
+
+  - set_fact: 
+      supervisor_postgres_database_path_discovered: "{{ pg_data.stdout }}"
+      supervisor_postgres_database_version_discovered: "{{ pg_version.stdout }}"
