@@ -26,4 +26,4 @@
     sudo: yes
     sudo_user: postgres
 
-  - set_fact: supervisor_postgres_database_path = pg_data.stdout
+  - set_fact: supervisor_postgres_database_path_discovered = pg_data.stdout
