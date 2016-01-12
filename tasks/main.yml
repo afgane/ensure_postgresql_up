@@ -12,6 +12,21 @@
     ignore_errors: yes
     when: supervisor_postgres.failed is defined
 
+  - shell: cat /etc/supervisor/conf.d/galaxy.conf
+    register: galaxy_conf
+    ignore_errors: true
+
+  - debug: var=galaxy_conf
+    ignore_errors: yes
+
+  - shell: cat /var/log/supervisor/postgresql*
+    register: superv
+    ignore_errors: true
+
+  - debug: var=superv
+    ignore_errors: yes
+
+
   - action: shell /usr/bin/pg_isready
     register: result
     until: result.stdout.find("accepting connections") != -1
@@ -37,13 +52,6 @@
   - debug: var=supervisor_postgres_database_path_discovered
   - debug: var=supervisor_postgres_database_version_discovered
   
-  - shell: cat /etc/supervisor/conf.d/galaxy.conf
-    register: galaxy_conf
-    ignore_errors: true
-
-  - debug: var=galaxy_conf
-    ignore_errors: yes
-
   - shell: find / -name postmaster
     register: postmaster_path
 
