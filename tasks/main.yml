@@ -39,7 +39,7 @@
   
   - shell: cat /etc/supervisor/conf.d/galaxy.conf
     register: galaxy_conf
-    ignore_erros: true
+    ignore_errors: true
 
   - debug: var=galaxy_conf
     ignore_errors: yes
