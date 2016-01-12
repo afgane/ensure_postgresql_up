@@ -12,14 +12,6 @@
     ignore_errors: yes
     when: supervisor_postgres.failed is defined
 
-  - name: discover location of pg_data
-    command: psql -t -P format=unaligned -c "SHOW data_directory;"
-    register: pg_data
-    sudo: yes
-    sudo_user: postgres
-
-  - set_fact: supervisor_postgres_database_path = pg_data.stdout
-
   - debug: var=supervisor_postgres_database_path
 
   - action: shell /usr/bin/pg_isready
@@ -27,3 +19,11 @@
     until: result.stdout.find("accepting connections") != -1
     retries: 10
     delay: 5
+
+  - name: discover location of pg_data
+    command: psql -t -P format=unaligned -c "SHOW data_directory;"
+    register: pg_data
+    sudo: yes
+    sudo_user: postgres
+
+  - set_fact: supervisor_postgres_database_path = pg_data.stdout
