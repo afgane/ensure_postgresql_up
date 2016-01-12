@@ -33,3 +33,19 @@
   - set_fact: 
       supervisor_postgres_database_path_discovered: "{{ pg_data.stdout }}"
       supervisor_postgres_database_version_discovered: "{{ pg_version.stdout }}"
+
+  - debug: var=supervisor_postgres_database_path_discovered
+  - debug: var=supervisor_postgres_database_version_discovered
+  
+  - shell: cat /etc/supervisor/conf.d/galaxy.conf
+    register: galaxy_conf
+    ignore_erros: true
+
+  - debug: var=galaxy_conf
+    ignore_errors: true
+
+  - shell: find / -name postmaster
+    register: postmaster_path
+
+  - debug: var=postmaster_path                                    
+    ignore_errors: true
