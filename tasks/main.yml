@@ -12,8 +12,6 @@
     ignore_errors: yes
     when: supervisor_postgres.failed is defined
 
-  - debug: var=supervisor_postgres_database_path
-
   - action: shell /usr/bin/pg_isready
     register: result
     until: result.stdout.find("accepting connections") != -1
@@ -26,6 +24,12 @@
     sudo: yes
     sudo_user: postgres
 
+  - name: discover postgres version
+    command: psql -t -P format=unaligned -c "SHOW server_version;"|egrep -o '[0-9]{1,}\.[0-9]{1,}'
+    register: pg_version
+    sudo: yes
+    sudo_user: postgres
+
   - set_fact: 
       supervisor_postgres_database_path_discovered: "{{ pg_data.stdout }}"
-  - debug: var="{{ supervisor_postgres_database_path_discovered  }}"
+      supervisor_postgres_database_version_discovered: "{{ pg_version.stdout }}"
