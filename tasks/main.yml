@@ -35,3 +35,4 @@
   - set_fact: 
       supervisor_postgres_database_path_discovered: "{{ pg_data.stdout }}"
       supervisor_postgres_database_version_discovered: "{{ pg_version.stdout }}"
+    changed_when: False
