@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  author: Marius van den Beek
+  description: Ensure postgresql is up and running.
+  license: MIT
+  min_ansible_version: 2.0.0.1
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+  categories:
+  - system
+dependencies: []
